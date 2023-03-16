@@ -50,6 +50,7 @@ public class SpiderStateMachine : MonoBehaviour
     // Referencias propias
     [HideInInspector] public NavMeshAgent agent;
     [HideInInspector] public Health health;
+    [HideInInspector] public SpiderProceduralWalk proceduralWalk;
 
     // Explosive rush
     [HideInInspector] public GameObject explosionParticle;
@@ -60,6 +61,7 @@ public class SpiderStateMachine : MonoBehaviour
     [HideInInspector] public bool isBezierClimbPaused = false;
     public Endpoint relativeStart;
     public Endpoint relativeEnd;
+    public LinkData linkData;
 
     // Variables de animación
     [HideInInspector] public int animStandUpHash;
@@ -88,10 +90,11 @@ public class SpiderStateMachine : MonoBehaviour
         agent.speed *= speedMultiplier;
         agent.acceleration *= speedMultiplier;
         lookAtTarget.smoothness *= speedMultiplier;
+        proceduralWalk.stepLength /= speedMultiplier;
 
         foreach (LegTarget leg in _legs)
         {
-            leg.stepSpeed *= speedMultiplier;
+            leg.stepSpeed *= speedMultiplier * 1.5f;
         }
     }
 
@@ -128,7 +131,6 @@ public class SpiderStateMachine : MonoBehaviour
             if (dist <= checkRadius && currentTarget != actorsManager.Players[i].transform)
             {
                 _currentCheckRadius = dist;
-                Debug.Log(actorsManager.Players[i].transform);
                 currentTarget = actorsManager.Players[i].transform;
             }
         }
@@ -188,6 +190,8 @@ public class SpiderStateMachine : MonoBehaviour
 
         agent = GetComponent<NavMeshAgent>();
         agent.updateUpAxis = false;
+
+        proceduralWalk = GetComponent<SpiderProceduralWalk>();
 
         // Privadas
         _defaultSpeed = agent.speed;
