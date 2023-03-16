@@ -6,8 +6,8 @@ using UnityEngine.AI;
 
 public class SpiderProceduralWalk : MonoBehaviour
 {
+    public float stepLength = 0.75f;
     [SerializeField] private LegData[] _legs;
-    [SerializeField] private float _stepLength = 0.75f;
     // [SerializeField] private float _stressPoint = 1.5f;
 
     private NavMeshAgent _agent;
@@ -34,12 +34,12 @@ public class SpiderProceduralWalk : MonoBehaviour
         }
     }
 
-//     private bool StressPointReached(int legIndex)
-//     {
-//         // bool isReached = _legs[legIndex].leg.LegExtension >= _stressPoint;
-// // 
-//         return true;
-//     }
+    //     private bool StressPointReached(int legIndex)
+    //     {
+    //         // bool isReached = _legs[legIndex].leg.LegExtension >= _stressPoint;
+    // // 
+    //         return true;
+    //     }
 
     private void WalkProcedurally()
     {
@@ -53,9 +53,9 @@ public class SpiderProceduralWalk : MonoBehaviour
             float distance = Vector3.Distance(legData.leg.Position, legData.raycast.Position);
 
             if (!CanMove(index)) continue;
-            if (!legData.leg.IsMoving && (distance <= _stepLength)) continue;
+            if (!legData.leg.IsMoving && (distance <= stepLength)) continue;
 
-            legData.leg.MoveTo(legData.raycast.Position, vel, _stepLength, legData.raycast.Normal);
+            legData.leg.MoveTo(legData.raycast.Position, vel, stepLength, legData.raycast.Normal);
         }
     }
 

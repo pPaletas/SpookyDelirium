@@ -73,6 +73,16 @@ namespace Unity.FPS.Gameplay
             return GetMouseOrStickLookAxis("Vertical");
         }
 
+        public bool GetDashInputDown()
+        {
+            if (CanProcessInput())
+            {
+                return m_Input.actions["Dash"].WasPressedThisFrame();
+            }
+
+            return false;
+        }
+
         public bool GetJumpInputDown()
         {
             if (CanProcessInput())

@@ -34,6 +34,7 @@ public class SpiderStartClimbState : SpiderBaseState
             _bezierCurrentTime = stateMachine.cachedBezierTime;
             _relativeStart = stateMachine.relativeStart;
             _relativeEnd = stateMachine.relativeEnd;
+            _currentLinkData = stateMachine.linkData;
         }
     }
 
@@ -55,6 +56,7 @@ public class SpiderStartClimbState : SpiderBaseState
             stateMachine.cachedBezierTime = _bezierCurrentTime;
             stateMachine.relativeStart = _relativeStart;
             stateMachine.relativeEnd = _relativeEnd;
+            stateMachine.linkData = _currentLinkData.Value;
         }
         else stateMachine.isBezierClimbPaused = false;
     }
@@ -145,19 +147,22 @@ public class SpiderStartClimbState : SpiderBaseState
 
         if (isbLink)
         {
+            // Este bloque se ejecuta apenas empieza a escalar
             if (!_isClimbing)
             {
-                // Gets start and end relative to agent
-
-                if (!stateMachine.isBezierClimbPaused) bLink.GetStartAndEndLink(stateMachine.transform.position, ref _relativeStart, ref _relativeEnd);
-
-                _currentLinkData = new LinkData
+                // Establece los EndPoints y el LinkData, solo si no hay información guardada en StateMachine
+                if (!stateMachine.isBezierClimbPaused)
                 {
-                    startPoint = stateMachine.transform.position,
-                    endPoint = _relativeEnd.point.position,
-                    startTangentPoint = _relativeStart.tangentPoint.position,
-                    endTangentPoint = _relativeEnd.tangentPoint.position
-                };
+                    bLink.GetStartAndEndLink(stateMachine.transform.position, ref _relativeStart, ref _relativeEnd);
+
+                    _currentLinkData = new LinkData
+                    {
+                        startPoint = stateMachine.transform.position,
+                        endPoint = _relativeEnd.point.position,
+                        startTangentPoint = _relativeStart.tangentPoint.position,
+                        endTangentPoint = _relativeEnd.tangentPoint.position
+                    };
+                }
 
                 _isClimbing = true;
 

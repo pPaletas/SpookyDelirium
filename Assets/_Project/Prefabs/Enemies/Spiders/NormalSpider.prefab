@@ -14737,7 +14737,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 81233400560972136}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2d8418b0b9634b1892b0268dd9c2743, type: 3}
   m_Name: 
@@ -14787,8 +14787,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RigLayers:
-  - m_Rig: {fileID: 0}
-    m_Active: 1
   - m_Rig: {fileID: 868857155832726968}
     m_Active: 1
   m_Effectors: []
@@ -17728,7 +17726,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e27364eefd6dd0341ba72a3bfc0d9727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 100
+  MaxHealth: 200
   CriticalHealthRatio: 0.3
 --- !u!195 &868857155255925016
 NavMeshAgent:
@@ -17751,7 +17749,7 @@ NavMeshAgent:
   m_Height: 1
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 2
 --- !u!114 &868857155255925018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17765,7 +17763,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spiderType: 0
-  checkRadius: 10
+  checkRadius: 20
   attackDistance: 3
   attackAngle: 25
   attackDamage: 10
@@ -17795,6 +17793,7 @@ MonoBehaviour:
   hitbox: {fileID: 0}
   agent: {fileID: 0}
   health: {fileID: 0}
+  proceduralWalk: {fileID: 0}
   explosionParticle: {fileID: 0}
   isInRushMode: 0
   cachedBezierTime: 0
@@ -17827,6 +17826,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6841392d0cda1d541b97665a892567de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stepLength: 0.75
   _legs:
   - leg: {fileID: 868857155432004665}
     raycast: {fileID: 868857154882464336}
@@ -17840,7 +17840,6 @@ MonoBehaviour:
     raycast: {fileID: 868857154661645705}
   - leg: {fileID: 868857156463064459}
     raycast: {fileID: 868857155410840050}
-  _stepLength: 0.25
 --- !u!114 &985731699778478043
 MonoBehaviour:
   m_ObjectHideFlags: 0

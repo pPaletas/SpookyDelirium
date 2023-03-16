@@ -101,11 +101,23 @@ public class SpiderFollowState : SpiderBaseState
         }
     }
 
+    // Lanzará un raycast desde el target hasta el suelo, esto para evitar errores cuando el jugador salta, y el enemigo se queda parado
+    private Vector3 GetGroundedDestination()
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(stateMachine.currentTarget.position, Vector3.down, out hit, 10f, stateMachine.groundLayer))
+            return hit.point;
+
+        return stateMachine.currentTarget.position;
+    }
+
     private void FollowTarget()
     {
         if (!_targetReached && stateMachine.currentTarget != null && stateMachine.gameObject.activeInHierarchy)
         {
-            stateMachine.agent.SetDestination(stateMachine.currentTarget.position);
+            Vector3 destination = GetGroundedDestination();
+            stateMachine.agent.SetDestination(destination);
         }
     }
 }

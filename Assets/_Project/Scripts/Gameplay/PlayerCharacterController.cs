@@ -7,13 +7,15 @@ namespace Unity.FPS.Gameplay
     [RequireComponent(typeof(CharacterController), typeof(PlayerInputHandler), typeof(AudioSource))]
     public class PlayerCharacterController : MonoBehaviour
     {
-        [Header("References")] [Tooltip("Reference to the main camera used for the player")]
+        [Header("References")]
+        [Tooltip("Reference to the main camera used for the player")]
         public Camera PlayerCamera;
 
         [Tooltip("Audio source for footsteps, jump, etc...")]
         public AudioSource AudioSource;
 
-        [Header("General")] [Tooltip("Force applied downward when in the air")]
+        [Header("General")]
+        [Tooltip("Force applied downward when in the air")]
         public float GravityDownForce = 20f;
 
         [Tooltip("Physic layers checked to consider the player grounded")]
@@ -22,14 +24,20 @@ namespace Unity.FPS.Gameplay
         [Tooltip("distance from the bottom of the character controller capsule to test for grounded")]
         public float GroundCheckDistance = 0.05f;
 
-        [Header("Movement")] [Tooltip("Max movement speed when grounded (when not sprinting)")]
+        [Header("Movement")]
+        [Tooltip("Max movement speed when grounded (when not sprinting)")]
         public float MaxSpeedOnGround = 10f;
 
         [Tooltip(
             "Sharpness for the movement when grounded, a low value will make the player accelerate and decelerate slowly, a high value will do the opposite")]
         public float MovementSharpnessOnGround = 15;
 
-        [Tooltip("Max movement speed when crouching")] [Range(0, 1)]
+        public float DashCooldown = 1f;
+        public float DashSpeedMultiplier = 3f;
+        public float DashAccelerationMultiplier = 3f;
+
+        [Tooltip("Max movement speed when crouching")]
+        [Range(0, 1)]
         public float MaxSpeedCrouchedRatio = 0.5f;
 
         [Tooltip("Max movement speed when not grounded")]
@@ -44,16 +52,20 @@ namespace Unity.FPS.Gameplay
         [Tooltip("Height at which the player dies instantly when falling off the map")]
         public float KillHeight = -50f;
 
-        [Header("Rotation")] [Tooltip("Rotation speed for moving the camera")]
+        [Header("Rotation")]
+        [Tooltip("Rotation speed for moving the camera")]
         public float RotationSpeed = 200f;
 
-        [Range(0.1f, 1f)] [Tooltip("Rotation speed multiplier when aiming")]
+        [Range(0.1f, 1f)]
+        [Tooltip("Rotation speed multiplier when aiming")]
         public float AimingRotationMultiplier = 0.4f;
 
-        [Header("Jump")] [Tooltip("Force applied upward when jumping")]
+        [Header("Jump")]
+        [Tooltip("Force applied upward when jumping")]
         public float JumpForce = 9f;
 
-        [Header("Stance")] [Tooltip("Ratio (0-1) of the character height where the camera will be at")]
+        [Header("Stance")]
+        [Tooltip("Ratio (0-1) of the character height where the camera will be at")]
         public float CameraHeightRatio = 0.9f;
 
         [Tooltip("Height of character when standing")]
@@ -65,7 +77,8 @@ namespace Unity.FPS.Gameplay
         [Tooltip("Speed of crouching transitions")]
         public float CrouchingSharpness = 10f;
 
-        [Header("Audio")] [Tooltip("Amount of footstep sounds played when moving one meter")]
+        [Header("Audio")]
+        [Tooltip("Amount of footstep sounds played when moving one meter")]
         public float FootstepSfxFrequency = 1f;
 
         [Tooltip("Amount of footstep sounds played when moving one meter while sprinting")]
@@ -126,6 +139,7 @@ namespace Unity.FPS.Gameplay
         Vector3 m_CharacterVelocity;
         Vector3 m_LatestImpactSpeed;
         float m_LastTimeJumped = 0f;
+        float m_LastTimeDashed = 0f;
         float m_CameraVerticalAngle = 0f;
         float m_FootstepDistanceCounter;
         float m_TargetCharacterHeight;
@@ -310,9 +324,18 @@ namespace Unity.FPS.Gameplay
                     targetVelocity = GetDirectionReorientedOnSlope(targetVelocity.normalized, m_GroundNormal) *
                                      targetVelocity.magnitude;
 
+                    float acceleration = MovementSharpnessOnGround;
+
+                    if (m_InputHandler.GetDashInputDown() && Time.time >= m_LastTimeJumped + DashCooldown)
+                    {
+                        m_LastTimeJumped = Time.time;
+                        targetVelocity *= DashSpeedMultiplier;
+                        acceleration *= DashAccelerationMultiplier;
+                    }
+
                     // smoothly interpolate between our current velocity and the target velocity based on acceleration speed
                     CharacterVelocity = Vector3.Lerp(CharacterVelocity, targetVelocity,
-                        MovementSharpnessOnGround * Time.deltaTime);
+                        acceleration * Time.deltaTime);
 
                     // jumping
                     if (IsGrounded && m_InputHandler.GetJumpInputDown())
