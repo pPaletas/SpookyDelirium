@@ -19,7 +19,8 @@ namespace Unity.FPS.Gameplay
         [Tooltip("List of weapon the player will start with")]
         public List<WeaponController> StartingWeapons = new List<WeaponController>();
 
-        [Header("References")] [Tooltip("Secondary camera used to avoid seeing weapon go throw geometries")]
+        [Header("References")]
+        [Tooltip("Secondary camera used to avoid seeing weapon go throw geometries")]
         public Camera WeaponCamera;
 
         [Tooltip("Parent transform where all weapon will be added in the hierarchy")]
@@ -57,7 +58,8 @@ namespace Unity.FPS.Gameplay
         [Tooltip("How fast the weapon goes back to it's original position after the recoil is finished")]
         public float RecoilRestitutionSharpness = 10f;
 
-        [Header("Misc")] [Tooltip("Speed at which the aiming animatoin is played")]
+        [Header("Misc")]
+        [Tooltip("Speed at which the aiming animatoin is played")]
         public float AimingAnimationSpeed = 10f;
 
         [Tooltip("Field of view when not aiming")]
@@ -291,15 +293,11 @@ namespace Unity.FPS.Gameplay
                     m_WeaponMainLocalPosition = Vector3.Lerp(m_WeaponMainLocalPosition,
                         AimingWeaponPosition.localPosition + activeWeapon.AimOffset,
                         AimingAnimationSpeed * Time.deltaTime);
-                    SetFov(Mathf.Lerp(m_PlayerCharacterController.PlayerCamera.fieldOfView,
-                        activeWeapon.AimZoomRatio * DefaultFov, AimingAnimationSpeed * Time.deltaTime));
                 }
                 else
                 {
                     m_WeaponMainLocalPosition = Vector3.Lerp(m_WeaponMainLocalPosition,
                         DefaultWeaponPosition.localPosition, AimingAnimationSpeed * Time.deltaTime);
-                    SetFov(Mathf.Lerp(m_PlayerCharacterController.PlayerCamera.fieldOfView, DefaultFov,
-                        AimingAnimationSpeed * Time.deltaTime));
                 }
             }
         }
