@@ -116,6 +116,7 @@ namespace Unity.FPS.Gameplay
         public bool HasJumpedThisFrame { get; private set; }
         public bool IsDead { get; private set; }
         public bool IsCrouching { get; private set; }
+        public bool IsDashing { get; private set; }
 
         public float RotationMultiplier
         {
@@ -138,6 +139,7 @@ namespace Unity.FPS.Gameplay
         Vector3 m_GroundNormal;
         Vector3 m_CharacterVelocity;
         Vector3 m_LatestImpactSpeed;
+        Vector3 m_Input;
         float m_LastTimeJumped = 0f;
         float m_LastTimeDashed = 0f;
         float m_CameraVerticalAngle = 0f;
@@ -311,13 +313,14 @@ namespace Unity.FPS.Gameplay
                 float speedModifier = isSprinting ? SprintSpeedModifier : 1f;
 
                 // converts move input to a worldspace vector based on our character's transform orientation
-                Vector3 worldspaceMoveInput = transform.TransformVector(m_InputHandler.GetMoveInput());
+                if (!IsDashing) m_Input = m_InputHandler.GetMoveInput();
+                Vector3 worldspaceMoveInput = transform.TransformVector(m_Input);
 
                 // handle grounded movement
                 if (IsGrounded)
                 {
                     // calculate the desired velocity from inputs, max speed, and current slope
-                    Vector3 targetVelocity = worldspaceMoveInput * MaxSpeedOnGround * speedModifier;
+                    Vector3 targetVelocity = worldspaceMoveInput * MaxSpeedOnGround;
                     // reduce speed if crouching by crouch speed ratio
                     if (IsCrouching)
                         targetVelocity *= MaxSpeedCrouchedRatio;
@@ -326,12 +329,24 @@ namespace Unity.FPS.Gameplay
 
                     float acceleration = MovementSharpnessOnGround;
 
-                    if (m_InputHandler.GetDashInputDown() && Time.time >= m_LastTimeJumped + DashCooldown)
+                    if (m_InputHandler.GetDashInputDown() && Time.time >= m_LastTimeDashed + DashCooldown && m_Input.sqrMagnitude != 0f)
                     {
-                        m_LastTimeJumped = Time.time;
-                        targetVelocity *= DashSpeedMultiplier;
-                        acceleration *= DashAccelerationMultiplier;
+                        IsDashing = true;
+                        m_LastTimeDashed = Time.time;
                     }
+
+                    if (IsDashing)
+                    {
+                        acceleration *= DashAccelerationMultiplier;
+                        targetVelocity *= DashSpeedMultiplier;
+
+                        if (Time.time - m_LastTimeDashed >= 0.1f)
+                        {
+                            IsDashing = false;
+                        }
+                    }
+
+                    if (!IsDashing) targetVelocity *= speedModifier;
 
                     // smoothly interpolate between our current velocity and the target velocity based on acceleration speed
                     CharacterVelocity = Vector3.Lerp(CharacterVelocity, targetVelocity,
