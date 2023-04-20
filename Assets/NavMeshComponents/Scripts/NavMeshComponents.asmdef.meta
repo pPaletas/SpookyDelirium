@@ -1,9 +1,13 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<< HEAD
 guid: 45caed1bec73c064a99024f59e282d1b
 =======
 guid: 14a88ffa502ea19419c07fc220bc4628
 >>>>>>> main
+=======
+guid: 8c4dd21966739024fbd72155091d199e
+>>>>>>> parent of 368e3b5... Merge branch 'Emanuel-Restrepo' into main
 AssemblyDefinitionImporter:
   externalObjects: {}
   userData: 

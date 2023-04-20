@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d31ccecf16173714483a8de8b6a04b4e, type: 3}
   m_Name: ColoredHeaderCreatorSettings
   m_EditorClassIdentifier: 
-  headerText: NAVMESHES
-  headerColor: {r: 0, g: 0.6283121, b: 1, a: 1}
+  headerText: AI
+  headerColor: {r: 0, g: 0.74408436, b: 1, a: 1}
   editorOnly: 1
   textAlignmentOptions: 0
   fontStyleOptions: 0
