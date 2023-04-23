@@ -68,6 +68,8 @@ public class SpiderStateMachine : MonoBehaviour
     [HideInInspector] public int animAttackHash;
     [HideInInspector] public int animLoadingExplosion;
 
+    [HideInInspector] public bool canGoForPlayer = false;
+
     private const string ANIM_STAND_UP = "StandUp";
     private const string ANIM_ATTACK = "Attack";
     private const string ANIM_LOADING_EXPLOSION = "LoadingExplosion";
@@ -115,6 +117,11 @@ public class SpiderStateMachine : MonoBehaviour
         }
 
         SetState(new SpiderKilledState(this));
+    }
+
+    public void TriggerEnemy()
+    {
+        canGoForPlayer = true;
     }
 
     private void SetClosestPlayer()

@@ -28,7 +28,7 @@ public class SpiderIdleState : SpiderBaseState
 
     protected virtual void CheckTransitions()
     {
-        if (!_detectedPlayer && CheckForAnyTarget())
+        if (/*!_detectedPlayer && CheckForAnyTarget() &&*/ stateMachine.canGoForPlayer)
         {
             stateMachine.animator.SetTrigger(stateMachine.animStandUpHash);
         }
